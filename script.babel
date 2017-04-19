@@ -1,0 +1,33 @@
+window.addEventListener('load', function(e) {
+  getQuote();
+  document.querySelector('.submit-btn')
+    .addEventListener('click', function(e) {
+      e.preventDefault();
+      getQuote();
+    });
+});
+
+function getQuote() {
+  const key = '9MtJp2foTXmshKsQ1jUYYUyQGLNMp1YCcw2jsndfUY2afungvW';
+  const request = new XMLHttpRequest();
+
+  request.open('POST',
+    'https://andruxnet-random-famous-quotes.p.mashape.com/',
+    true);
+  request.setRequestHeader('X-Mashape-Key', key);
+  request.setRequestHeader('Content-Type',
+    'application/x-www-form-urlencoded');
+  request.setRequestHeader('Accpet', 'application/json');
+
+  request.onload = function() {
+    if (request.status == 200) {
+      const data = JSON.parse(request.responseText);
+      const tweetText = `https://twitter.com/intent/tweet?text=${data.quote} —${data.author}`;
+      document.querySelector('.quote-text').innerHTML = data.quote;
+      document.querySelector('.author-name').innerHTML = data.author;
+      document.querySelector('.tweet-btn').href = tweetText;
+    }
+  }
+
+  request.send();
+}
